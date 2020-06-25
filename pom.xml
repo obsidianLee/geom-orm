@@ -1,0 +1,163 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <artifactId>geometry-hibernate-orm-demo</artifactId>
+    <name>geometry-hibernate-orm-demo</name>
+    <description>some demo codes to show how to transform geometry data from api to mysql database</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.38</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+<!--    方案一,引用geotools里的org.locationtech.jts.geom包，同时需要引用下方hibernate方言    -->
+<!--        <dependency>-->
+<!--            <groupId>org.geotools</groupId>-->
+<!--            <artifactId>gt-main</artifactId>-->
+<!--            <version>24-SNAPSHOT</version>-->
+<!--        </dependency>-->
+        <!--        方案二，不需引用geotools，直接使用Hibernate方言包        -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-spatial</artifactId>
+            <version>5.3.10.Final</version>
+        </dependency>
+        <!--		以下依赖转是Geometry实体类转json需要-->
+        <!--		<dependency>-->
+        <!--			<groupId>org.geotools</groupId>-->
+        <!--			<artifactId>gt-geojson</artifactId>-->
+        <!--			<version>24-SNAPSHOT</version>-->
+        <!--		</dependency>-->
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>osgeo</id>
+            <name>OSGeo Release Repository</name>
+            <url>https://repo.osgeo.org/repository/release/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>osgeo-snapshot</id>
+            <name>OSGeo Snapshot Repository</name>
+            <url>https://repo.osgeo.org/repository/snapshot/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!--plugin below for jdk11-->
+            <!--			<plugin>-->
+            <!--				<artifactId>maven-clean-plugin</artifactId>-->
+            <!--				<version>3.1.0</version>-->
+            <!--			</plugin>-->
+            <!--			<plugin>-->
+            <!--				<artifactId>maven-resources-plugin</artifactId>-->
+            <!--				<version>3.1.0</version>-->
+            <!--			</plugin>-->
+            <!--			<plugin>-->
+            <!--				<artifactId>maven-compiler-plugin</artifactId>-->
+            <!--				<version>3.8.0</version>-->
+            <!--				<configuration>-->
+            <!--					<release>11</release>-->
+            <!--				</configuration>-->
+            <!--			</plugin>-->
+            <!--			<plugin>-->
+            <!--				<artifactId>maven-surefire-plugin</artifactId>-->
+            <!--				<version>2.22.1</version>-->
+            <!--			</plugin>-->
+            <!--			<plugin>-->
+            <!--				<artifactId>maven-jar-plugin</artifactId>-->
+            <!--				<version>3.1.0</version>-->
+            <!--			</plugin>-->
+            <!--			<plugin>-->
+            <!--				<artifactId>maven-install-plugin</artifactId>-->
+            <!--				<version>3.0.0-M1</version>-->
+            <!--			</plugin>-->
+            <!--			<plugin>-->
+            <!--				<artifactId>maven-deploy-plugin</artifactId>-->
+            <!--				<version>3.0.0-M1</version>-->
+            <!--			</plugin>-->
+        </plugins>
+    </build>
+</project>
