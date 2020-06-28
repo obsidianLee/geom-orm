@@ -6,7 +6,6 @@ import lombok.Data;
 public class GridIPO {
     private String name;
     private String code;
-//    private List<org.locationtech.jts.geom.Coordinate> shape;
 //    private List<org.locationtech.jts.geom.CoordinateXYZM> shape;
 
     public static void main(String[] args) {

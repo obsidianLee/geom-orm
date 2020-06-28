@@ -4,8 +4,8 @@ import com.hykj.sc.bsc.lxq.CustomGeographic3DMCRS;
 import com.hykj.sc.bsc.lxq.dataobject.GridDO;
 import com.hykj.sc.bsc.lxq.dataobject.GridDO2;
 import com.hykj.sc.bsc.lxq.ipo.GridIPO;
-import com.hykj.sc.bsc.lxq.ipo.GridIPO3;
 import com.hykj.sc.bsc.lxq.ipo.GridIPO2;
+import com.hykj.sc.bsc.lxq.ipo.GridIPO3;
 import com.hykj.sc.bsc.lxq.repository.GridDO2Repository;
 import com.hykj.sc.bsc.lxq.repository.GridDORepository;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -34,7 +31,8 @@ public class GridService {
 
 
     /**
-     * 方案一，采用geotools的org.locationtech.jts.geom包下geometry类型接收参数，并通过WKT方式转换为hibernate支持的geometry
+     * 方案一
+     * 采用geotools的org.locationtech.jts.geom包下geometry类型接收参数，并通过WKT方式转换为hibernate支持的geometry
      * @param gridIPO
      */
     public void insertGridSolution1(GridIPO gridIPO) {
@@ -75,11 +73,9 @@ public class GridService {
 //        gridDO.setName(gridIPO.getName());
 //        gridDO.setCode(gridIPO.getCode());
 //        gridDO.setShape(decodePg);
-//        gridDO.setPkey("direct");
-//        gridDO.setSortIdx(1);
+//        gridDO.setKey(UUID.randomUUID().toString().replace("-", ""));
 //        gridDO.setCreateTime(new Date());
 //        gridDO.setUpdateTime(new Date());
-//        gridDO.setKey("aasssoooo");
 //        gridDao.save(gridDO);
     }
 
@@ -109,6 +105,7 @@ public class GridService {
     }
 
     /**
+     * 方案二
      * 直接使用hibernate支持的com.vividsolutions.jts.geom包下Geometry做存取介质，支持三维坐标点，但需考虑数据库是否支持(MYSQL不支持)
      * 坐标点集需闭合，即首尾点要相同
      * @param gridIPO
@@ -122,11 +119,9 @@ public class GridService {
         gridDO.setName(gridIPO.getName());
         gridDO.setCode(gridIPO.getCode());
         gridDO.setShape(polygon);
-        gridDO.setPkey("direct");
-        gridDO.setSortIdx(1);
         gridDO.setCreateTime(new Date());
         gridDO.setUpdateTime(new Date());
-        gridDO.setKey("aasssoooo");
+        gridDO.setKey(UUID.randomUUID().toString().replace("-", ""));
         gridDao2.save(gridDO);
     }
 
@@ -141,7 +136,13 @@ public class GridService {
         return ipo;
     }
 
-    /** 该方法无法从SpringMVC底层自带jackson直接转换为G3DM实体类,IPO类中需自建数组集合接收前端数据*/
+    /**
+     * 方案三
+     * 采用hibernate5.x开始支持的geolatte包中的实体，通过定制参考坐标系统（本项目采用）或采用国际通用参考坐标系统
+     * （WGS84,geolatte自带实现）,构建空间地理多边形Polygon。
+     * 注：该方法无法从jackson直接转换为G3DM实体类,IPO类中需自建数组集合接收前端数据
+     * @param ipo
+     */
     public void insertGridSolution3(GridIPO3 ipo) {
         GeodeticLongitudeCSAxis x = new GeodeticLongitudeCSAxis("x", Unit.DEGREE);
         GeodeticLatitudeCSAxis y = new GeodeticLatitudeCSAxis("y", Unit.DEGREE);
@@ -164,12 +165,10 @@ public class GridService {
         GridDO gd = new GridDO();
         gd.setName(ipo.getName());
         gd.setShape(polygon);
-        gd.setPkey("direct");
-        gd.setCode("s3");
-        gd.setSortIdx(1);
+        gd.setCode(ipo.getCode());
         gd.setCreateTime(new Date());
         gd.setUpdateTime(new Date());
-        gd.setKey("aasssoooo");
+        gd.setKey(UUID.randomUUID().toString().replace("-", ""));
         gridDao.save(gd);
     }
 
@@ -178,19 +177,17 @@ public class GridService {
         org.geolatte.geom.Polygon<G3DM> shape = gridDO.getShape();
         org.geolatte.geom.LinearRing<G3DM> exteriorRing = shape.getExteriorRing();
         PositionSequence<G3DM> positions = exteriorRing.getPositions();
-        List<G3DM> shapes = new ArrayList<>(positions.size());
+        List<double[]> shapes = new ArrayList<>(positions.size());
         for (int i = 0; i < positions.size(); i++) {
-            G3DM position = positions.getPositionN(i);
-            shapes.add(position);
+            G3DM po = positions.getPositionN(i);
+            shapes.add(new double[]{po.getLat(),po.getLon(),po.getHeight(),po.getM()});
         }
         GridIPO3 ipo = new GridIPO3();
         ipo.setName(gridDO.getName());
         ipo.setCode(gridDO.getCode());
-//        ipo.setShape();
+        ipo.setShape(shapes);
         return ipo;
     }
 
-    public static void main(String[] args) {
-    }
 
 }
