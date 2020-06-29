@@ -106,7 +106,8 @@ public class GridService {
 
     /**
      * 方案二
-     * 直接使用hibernate支持的com.vividsolutions.jts.geom包下Geometry做存取介质，支持三维坐标点，但需考虑数据库是否支持(MYSQL不支持)
+     * 直接使用hibernate支持的com.vividsolutions.jts.geom包下Geometry做存取介质，支持维坐标点，但需考虑数据库是否支持(MYSQL
+     * 不支持)，该方法实现二维坐标点
      * 坐标点集需闭合，即首尾点要相同
      * @param gridIPO
      */
