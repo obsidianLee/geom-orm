@@ -5,4 +5,4 @@
 同一包下的Coordinate类，则可以正确执行插入查询操作；同样，方案三如果调整坐标类G3DM为G2D，则同样可以正常执行。原因就是前者是四维
 坐标类，有四个参数，后者是2维坐标类，有两个参数。
 ## 项目环境
-springMVC
+springMVC5.x    Hibernate5.x    geotools工具包
