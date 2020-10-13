@@ -63,7 +63,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
         <!--    方案一,引用geotools里的org.locationtech.jts.geom包，同时需要引用下方hibernate方言    -->
